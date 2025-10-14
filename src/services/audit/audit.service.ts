@@ -21,4 +21,10 @@ export class AuditService {
     async getAllLogs(): Promise<AuditLogsEntity[]> {
         return await this.auditLogsRepository.find();
     }
+
+    async getLogsByPattern(pattern: string): Promise<AuditLogsEntity[]> {
+        return await this.auditLogsRepository.find({
+            where: { pattern },
+        });
+    }
 }
