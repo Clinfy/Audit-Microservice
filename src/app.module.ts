@@ -24,25 +24,6 @@ imports: [
         }),
     }),
 
-    ClientsModule.registerAsync([
-        {
-            name: 'AUDIT_LISTENER_SERVICE',
-            imports:[ConfigModule],
-            inject: [ConfigService],
-            useFactory: (configService: ConfigService) => ({
-                transport: Transport.RMQ,
-                options: {
-                    urls: [configService.get<string>('RABBITMQ_URL') as string],
-                    queue: 'audit_queue',
-                    queueOptions: {
-                        durable: true
-                    },
-                    noAck: false,
-                }
-            })
-        }
-    ]),
-
     TypeOrmModule.forFeature([AuditLogsEntity]),
     AuditModule
     ],
