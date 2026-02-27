@@ -4,6 +4,7 @@ import {extractBearerToken} from "src/common/tools/extract-bearer-auth";
 import axios, {isAxiosError} from "axios";
 import {propagateAxiosError} from "src/common/tools/propagate-axios-error";
 import { Permissions } from 'src/middlewares/decorators/permission.decorator';
+import { getClientIp } from 'src/common/tools/get-client-ip';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -30,8 +31,8 @@ export class AuthGuard implements CanActivate {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'content-type': 'application/json',
-                        'x-forwarded-for': request.ip,
-                        'x-real-ip': request.ip,
+                        'x-forwarded-for': getClientIp(request),
+                        'x-real-ip': getClientIp(request),
                         'user-agent': request.headers['user-agent'] || ''
                     },
                 }),
