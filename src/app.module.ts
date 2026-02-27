@@ -5,11 +5,13 @@ import {AuditModule} from 'src/services/audit/audit.module';
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {AuditLogsEntity} from "src/entities/audit-logs.entity";
+import { validate } from 'src/config/env-validation';
 
 @Module({
 imports: [
     ConfigModule.forRoot({
         isGlobal: true,
+      validate
     }),
 
     TypeOrmModule.forRootAsync({
