@@ -29,7 +29,10 @@ export class AuthGuard implements CanActivate {
                 axios.get(`${baseUrl}/users/can-do/${permission}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
-                        'content-type': 'application/json'
+                        'content-type': 'application/json',
+                        'x-forwarded-for': request.ip,
+                        'x-real-ip': request.ip,
+                        'user-agent': request.headers['user-agent'] || ''
                     },
                 }),
             );
