@@ -4,29 +4,34 @@ import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule);
 
-    const configService = app.get(ConfigService);
-    const rabbitMqUrl = configService.get<string>('RABBITMQ_URL');
+  //Trust Proxy
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.set('trust proxy', 1);
 
-    if (!rabbitMqUrl) {
-        throw new Error('Environment variable RABBITMQ_URL is not defined');
-    }
+  //RabbitMQ
+  const configService = app.get(ConfigService);
+  const rabbitMqUrl = configService.get<string>('RABBITMQ_URL');
 
-    app.connectMicroservice<MicroserviceOptions>({
-        transport: Transport.RMQ,
-        options: {
-            urls: [rabbitMqUrl],
-            queue: 'audit_queue',
-            wildcards: true,
-            queueOptions: {
-                durable: true,
-            },
-            noAck: false,
-        },
-    });
+  if (!rabbitMqUrl) {
+    throw new Error('Environment variable RABBITMQ_URL is not defined');
+  }
 
-    await app.startAllMicroservices();
-    await app.listen(process.env.PORT ?? 3000);
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [rabbitMqUrl],
+      queue: 'audit_queue',
+      wildcards: true,
+      queueOptions: {
+        durable: true,
+      },
+      noAck: false,
+    },
+  });
+
+  await app.startAllMicroservices();
+  await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
