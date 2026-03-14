@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -9,6 +10,9 @@ async function bootstrap() {
   //Trust Proxy
   const expressApp = app.getHttpAdapter().getInstance();
   expressApp.set('trust proxy', true);
+
+  //Cookie Parser
+  app.use(cookieParser());
 
   //RabbitMQ
   const configService = app.get(ConfigService);
