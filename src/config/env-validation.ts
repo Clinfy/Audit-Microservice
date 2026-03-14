@@ -17,6 +17,10 @@ class EnvironmentVariables {
   @IsString()
   @IsNotEmpty()
   AUTH_SERVICE_URL: string;
+
+  @IsString()
+  @IsNotEmpty()
+  AUTH_SERVICE_API_KEY: string;
 }
 
 export function validate(config: Record<string, unknown>) {
