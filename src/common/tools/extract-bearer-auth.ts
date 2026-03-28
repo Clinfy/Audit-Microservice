@@ -6,7 +6,7 @@ export function extractAuthToken(request: Request): string {
   if (cookie) return cookie;
 
   const authorization = request.headers['authorization'];
-  if (authorization && authorization.startsWith('Bearer ')) {
+  if (authorization?.startsWith('Bearer ')) {
     return authorization.slice(7);
   }
 
