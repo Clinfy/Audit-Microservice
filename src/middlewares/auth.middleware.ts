@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable, InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Permissions } from 'src/middlewares/decorators/permission.decorator';
 import { extractAuthToken } from 'src/common/tools/extract-bearer-auth';
@@ -26,10 +31,12 @@ export class AuthGuard implements CanActivate {
         ),
       );
 
+      if(!userCanDo.some(Boolean)) throw new UnauthorizedException()
+
       return userCanDo.some(Boolean);
 
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException(error);
     }
   }
 }
