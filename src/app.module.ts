@@ -6,29 +6,30 @@ import {ConfigModule, ConfigService} from "@nestjs/config";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {AuditLogsEntity} from "src/entities/audit-logs.entity";
 import { validate } from 'src/config/env-validation';
+import { AuthClientService } from 'src/clients/auth/auth-client.service';
 
 @Module({
-imports: [
+  imports: [
     ConfigModule.forRoot({
-        isGlobal: true,
-      validate
+      isGlobal: true,
+      validate,
     }),
 
     TypeOrmModule.forRootAsync({
-        imports: [ConfigModule],
-        inject: [ConfigService],
-        useFactory: (configService: ConfigService) => ({
-            type: 'postgres',
-            url: configService.get<string>('DATABASE_URL'),
-            entities: [AuditLogsEntity],
-            synchronize: true,
-        }),
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        url: configService.get<string>('DATABASE_URL'),
+        entities: [AuditLogsEntity],
+        synchronize: true,
+      }),
     }),
 
     TypeOrmModule.forFeature([AuditLogsEntity]),
-    AuditModule
-    ],
-    controllers: [AppController],
-    providers: [AppService],
+    AuditModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService, AuthClientService],
 })
 export class AppModule {}
