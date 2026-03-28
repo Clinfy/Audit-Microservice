@@ -33,7 +33,7 @@ export class AuthClientService {
 
     const authApi = axios.create({
       baseURL: baseUrl,
-      timeout: 1000,
+      timeout: 5000,
     })
 
     authApi.interceptors.request.use(async (config) => {
