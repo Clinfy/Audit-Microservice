@@ -69,6 +69,8 @@
   },
   "overrides": {
     "ajv": "^8.17.1",
-    "file-type": "^21.3.2"
+    "file-type": "^21.3.2",
+    "picomatch": "^4.0.3",
+    "path-to-regexp": "^8.3.0"
   }
 }
