@@ -2,19 +2,23 @@ name: Deploy to Heroku
 
 on:
   workflow_run:
-    workflows: ["Run Build Tests"]
+    workflows: ["Run Jest/Build Tests"]
     types:
       - completed
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: main
 
       - name: Install Heroku CLI
         run: curl https://cli-assets.heroku.com/install.sh | sh
