@@ -1,4 +1,4 @@
-name: Run Build Tests
+name: Run Jest/Build Tests
 
 on:
   push:
@@ -9,6 +9,9 @@ on:
 jobs:
   run-tests-and-build:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
 
     steps:
       #1. Set up Docker
@@ -32,6 +35,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      #5. Compile the application
+      # 5. Execute all tests (see jest.config.js)
+      - name: Run tests
+        run: npm run test
+
+      #6. Compile the application
       - name: Build
         run: npm run build
