@@ -7,15 +7,13 @@ import { propagateAxiosError } from 'src/common/utils/propagate-axios-error';
 
 @Injectable()
 export class AuthClientService {
-  constructor(
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly configService: ConfigService) {}
 
   async canDo(permission: string, token: string, request: Request): Promise<boolean> {
     const authApi = await this.axiosAuthApi(request);
     const response = await authApi.get<boolean>(`/users/can-do/${permission}`, {
-      headers: { Authorization: `Bearer ${token}`}
-    })
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     return response.data;
   }
@@ -34,20 +32,24 @@ export class AuthClientService {
     const authApi = axios.create({
       baseURL: baseUrl,
       timeout: 5000,
-    })
+    });
 
-    authApi.interceptors.request.use(async (config) => {
-      config.headers['x-api-key'] = apiKey;
-      config.headers['content-type'] = 'application/json';
-      config.headers['x-forwarded-for'] = getClientIp(request);
-      config.headers['x-real-ip'] = getClientIp(request);
-      config.headers['user-agent'] = request.headers['user-agent'] || '';
-      return config;
-    },
-      error => propagateAxiosError(error)
-      );
+    authApi.interceptors.request.use(
+      async (config) => {
+        config.headers['x-api-key'] = apiKey;
+        config.headers['content-type'] = 'application/json';
+        config.headers['x-forwarded-for'] = getClientIp(request);
+        config.headers['x-real-ip'] = getClientIp(request);
+        config.headers['user-agent'] = request.headers['user-agent'] || '';
+        return config;
+      },
+      (error) => propagateAxiosError(error),
+    );
 
-    authApi.interceptors.response.use(response => response, error => propagateAxiosError(error));
+    authApi.interceptors.response.use(
+      (response) => response,
+      (error) => propagateAxiosError(error),
+    );
 
     return authApi;
   }

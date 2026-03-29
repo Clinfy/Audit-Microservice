@@ -1,5 +1,5 @@
-import {Request} from "express";
-import {UnauthorizedException} from "@nestjs/common";
+import { Request } from 'express';
+import { UnauthorizedException } from '@nestjs/common';
 
 export function extractAuthToken(request: Request): string {
   const cookie = request.cookies?.['auth_token'];
