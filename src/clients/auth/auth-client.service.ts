@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { Request } from 'express';
-import { getClientIp } from 'src/common/tools/get-client-ip';
-import { propagateAxiosError } from 'src/common/tools/propagate-axios-error';
+import { getClientIp } from 'src/common/utils/get-client-ip.util';
+import { propagateAxiosError } from 'src/common/utils/propagate-axios-error';
 
 @Injectable()
 export class AuthClientService {

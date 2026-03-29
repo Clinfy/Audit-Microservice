@@ -5,8 +5,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Permissions } from 'src/middlewares/decorators/permission.decorator';
-import { extractAuthToken } from 'src/common/tools/extract-bearer-auth';
+import { Permissions } from 'src/common/decorators/permission.decorator';
+import { extractAuthToken } from 'src/common/utils/extract-bearer-auth.util';
 import { AuthClientService } from 'src/clients/auth/auth-client.service';
 
 @Injectable()

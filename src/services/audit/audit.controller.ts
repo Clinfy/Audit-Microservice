@@ -2,8 +2,8 @@ import {Controller, Get, Param, UseGuards} from '@nestjs/common';
 import {AuditService} from 'src/services/audit/audit.service';
 import {Ctx, EventPattern, Payload, RmqContext} from '@nestjs/microservices';
 import {AuditLogsEntity} from 'src/entities/audit-logs.entity';
-import {AuthGuard} from "src/middlewares/auth.middleware";
-import {Permissions} from "src/middlewares/decorators/permission.decorator";
+import {AuthGuard} from "src/common/guards/auth.guard";
+import {Permissions} from "src/common/decorators/permission.decorator";
 
 
 @Controller('audit')
