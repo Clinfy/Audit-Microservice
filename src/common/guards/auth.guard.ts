@@ -1,9 +1,9 @@
 import { CanActivate, ExecutionContext, HttpStatus, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { extractAuthToken } from 'src/common/utils/extract-bearer-auth.util';
 import { AuthClientService } from 'src/clients/auth/auth-client.service';
 import { EndpointKey } from 'src/common/decorators/endpoint-key.decorator';
 import { AuthErrorCodes, AuthException } from 'src/common/guards/auth.exception';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
 
     const request = context.switchToHttp().getRequest();
-    const token = extractAuthToken(request);
+    const token = this.extractAuthToken(request);
 
     const endpointKey = this.reflector.getAllAndOverride<string>(EndpointKey, [context.getHandler(), context.getClass()]);
     const requiredPermissions = await this.authClient.getEndpointPermissions(endpointKey, request);
@@ -34,5 +34,21 @@ export class AuthGuard implements CanActivate {
       );
 
     return userCanDo.some(Boolean);
+  }
+
+  private extractAuthToken(request: Request): string {
+    const cookie = request.cookies?.['auth_token'];
+    if (cookie) return cookie;
+
+    const authorization = request.headers['authorization'];
+    if (authorization?.startsWith('Bearer ')) {
+      return authorization.slice(7);
+    }
+
+    throw new AuthException(
+      'Authentication cookie is missing, expired, or invalid.',
+      AuthErrorCodes.AUTH_COOKIE_EXPIRED_INVALID,
+      401,
+    );
   }
 }
